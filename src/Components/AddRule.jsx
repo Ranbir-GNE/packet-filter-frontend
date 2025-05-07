@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 
-const mockUsers = [
-  { id: "1", name: "Alice", ip: "192.168.1.2" },
-  { id: "2", name: "Bob", ip: "192.168.1.3" },
-  { id: "3", name: "Charlie", ip: "192.168.1.4" },
-];
-
 const LoadingSpinner = () => (
   <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-white"></div>
 );
@@ -17,6 +11,20 @@ const AddRule = () => {
   const [blockIP, setBlockIP] = useState("");
   const [blockedIPs, setBlockedIPs] = useState({});
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]); 
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:5000/api/users");
+        setUsers(data.users);
+      } catch (err) {
+        console.error("Failed to fetch users:", err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     const fetchBlockedIPs = async () => {
@@ -95,20 +103,24 @@ const AddRule = () => {
       <div className="border rounded-lg p-4 shadow-md">
         <h2 className="text-lg font-semibold mb-4">Users & IPs</h2>
         <div className="space-y-2 max-h-64 overflow-y-auto">
-          {mockUsers.map((user) => (
-            <div
-              key={user.id}
-              className={`p-3 border rounded cursor-pointer ${
-                selectedUser?.id === user.id
-                  ? "bg-gray-200"
-                  : "hover:bg-gray-100"
-              }`}
-              onClick={() => setSelectedUser(user)}
-            >
-              <div className="font-medium">{user.name}</div>
-              <div className="text-sm text-gray-500">{user.ip}</div>
-            </div>
-          ))}
+          {users.length > 0 ? (
+            users.map((user) => (
+              <div
+                key={user.id}
+                className={`p-3 border rounded cursor-pointer ${
+                  selectedUser?.id === user.id
+                    ? "bg-gray-200"
+                    : "hover:bg-gray-100"
+                }`}
+                onClick={() => setSelectedUser(user)}
+              >
+                <div className="font-medium">{user.username}</div>
+                <div className="text-sm text-gray-500">{user.email}</div>
+              </div>
+            ))
+          ) : (
+            <div className="text-gray-500 text-center py-4">No users found</div>
+          )}
         </div>
       </div>
 
@@ -120,7 +132,7 @@ const AddRule = () => {
             <div className="mb-4">
               <div className="mb-2 text-gray-600">
                 Selected User:{" "}
-                <span className="font-semibold">{selectedUser.name}</span>
+                <span className="font-semibold">{selectedUser.username}</span>
               </div>
               <div className="flex gap-2">
                 <input
