@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+const BASE_URL = import.meta.env.VITE_BASE_URL;;
 const NetworkTableHostname = () => {
   const [data, setData] = useState([]);
 
@@ -9,7 +9,7 @@ const NetworkTableHostname = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/total-bytes-hostname"
+          `${BASE_URL}/api/total-bytes-hostname`
         ); // Updated API endpoint
         setData(response.data); // Use the aggregated data directly
       } catch (error) {

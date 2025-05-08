@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
-
+const BASE_URL = import.meta.env.VITE_BASE_URL;;
 const CumalativeTable = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -15,7 +15,7 @@ const CumalativeTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/all-entries"
+          `${BASE_URL}/api/all-entries`
         ); // API endpoint
         setData(response.data);
         setFilteredData(response.data);

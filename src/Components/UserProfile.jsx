@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import userContext from "../context/UserContext";
-
+const BASE_URL = import.meta.env.VITE_BASE_URL;;
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -22,7 +22,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/user/${userId}`
+          `${BASE_URL}/api/user/${userId}`
         );
         setUserData(response.data.user);
       } catch (error) {

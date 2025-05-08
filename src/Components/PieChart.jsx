@@ -3,7 +3,7 @@ import { Pie } from "react-chartjs-2";
 import axios from "axios";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import LoadingSpinner from "./LoadingSpinner";
-
+const BASE_URL = import.meta.env.VITE_BASE_URL;;
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = () => {
@@ -14,7 +14,7 @@ const PieChart = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/total-bytes-hostname" // Updated API endpoint
+          `${BASE_URL}/api/total-bytes-hostname` // Updated API endpoint
         );
         const data = response.data;
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import userContext from "../context/UserContext";
 import logo from "../assets/logo.png"; // Adjust the path to your logo image
+const BASE_URL = import.meta.env.VITE_BASE_URL;;
 
 const Navbar = () => {
   const [username, setUsername] = useState("");
@@ -22,7 +23,7 @@ const Navbar = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/user/${userId}`
+          `${BASE_URL}/api/user/${userId}`
         );
         setUsername(response.data.user.username); 
         setIsLogin(true);
