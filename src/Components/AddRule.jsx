@@ -8,18 +8,20 @@ const LoadingSpinner = () => (
 
 const AddRule = () => {
   const [selectedUser, setSelectedUser] = useState(null);
-  const [blockIP, setBlockIP] = useState("");
-  const [blockedIPs, setBlockedIPs] = useState({});
+  const [blockDomain, setBlockDomain] = useState(""); // Changed from blockIP
+  const [blockedDomains, setBlockedDomains] = useState({}); // Changed from blockedIPs
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]); 
+  const [users, setUsers] = useState(null); // Change initial state to null
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const { data } = await axios.get("http://localhost:5000/api/users");
-        setUsers(data.users);
+        // Update this line to match the API response structure
+        setUsers(data.client);
       } catch (err) {
         console.error("Failed to fetch users:", err);
+        setUsers([]);
       }
     };
 
@@ -32,44 +34,48 @@ const AddRule = () => {
 
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/rules/${selectedUser.id}`
+          `http://localhost:5000/api/blocked-domains/${selectedUser.user_id}`
         );
-        setBlockedIPs((prev) => ({
+        
+        // Update to match the new API response structure
+        setBlockedDomains((prev) => ({
           ...prev,
-          [selectedUser.id]: data,
+          [selectedUser.user_id]: data.blockedDomains
         }));
       } catch (err) {
         console.error(
-          "Failed to fetch blocked IPs:",
+          "Failed to fetch blocked domains:",
           err.response?.data?.message || err.message
         );
+        // Initialize empty array if no domains found
+        setBlockedDomains((prev) => ({
+          ...prev,
+          [selectedUser.user_id]: []
+        }));
       }
     };
 
     fetchBlockedIPs();
   }, [selectedUser]);
 
-  const handleBlockIP = async () => {
-    const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-    if (!ipRegex.test(blockIP)) {
-      alert("Invalid IP address");
-      return;
-    }
+  const handleBlockDomain = async () => {
+    // Remove IP validation and add basic domain validation
+    
 
     if (!selectedUser) return;
 
     setLoading(true);
     try {
       const { data } = await axios.post("http://localhost:5000/api/rules/add", {
-        userId: selectedUser.id,
-        blockedIP: blockIP,
+        userId: selectedUser.user_id, // Changed from userId to username
+        domain: blockDomain, // Changed from blockedIP
       });
 
-      setBlockedIPs((prev) => ({
+      setBlockedDomains((prev) => ({
         ...prev,
-        [selectedUser.id]: [...(prev[selectedUser.id] || []), blockIP],
+        [selectedUser.user_id]: data.blockedDomains
       }));
-      setBlockIP("");
+      setBlockDomain("");
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     } finally {
@@ -77,17 +83,17 @@ const AddRule = () => {
     }
   };
 
-  const handleRemoveIP = async (userId, ip) => {
+  const handleRemoveIP = async (userId, domain) => {
     try {
       await axios.delete("http://localhost:5000/api/rules/delete", {
         data: {
           userId,
-          blockedIP: ip,
+          blockedDomain: domain, // Updated parameter name
         },
       });
 
-      setBlockedIPs((prev) => {
-        const updated = prev[userId].filter((x) => x !== ip);
+      setBlockedDomains((prev) => {
+        const updated = prev[userId].filter((d) => d !== domain);
         return {
           ...prev,
           [userId]: updated,
@@ -103,19 +109,21 @@ const AddRule = () => {
       <div className="border rounded-lg p-4 shadow-md">
         <h2 className="text-lg font-semibold mb-4">Users & IPs</h2>
         <div className="space-y-2 max-h-64 overflow-y-auto">
-          {users.length > 0 ? (
+          {!users ? (
+            <div className="text-gray-500 text-center py-4">Loading users...</div>
+          ) : users.length > 0 ? (
             users.map((user) => (
               <div
-                key={user.id}
+                key={user.user_id}
                 className={`p-3 border rounded cursor-pointer ${
-                  selectedUser?.id === user.id
+                  selectedUser?.user_id === user.user_id
                     ? "bg-gray-200"
                     : "hover:bg-gray-100"
                 }`}
                 onClick={() => setSelectedUser(user)}
               >
-                <div className="font-medium">{user.username}</div>
-                <div className="text-sm text-gray-500">{user.email}</div>
+                <div className="font-medium">{user.name}</div>
+                <div className="text-sm text-gray-500">{user.ip_address}</div>
               </div>
             ))
           ) : (
@@ -126,24 +134,24 @@ const AddRule = () => {
 
       {/* Block IPs */}
       <div className="border rounded-lg p-4 shadow-md">
-        <h2 className="text-lg font-semibold mb-4">Block IP</h2>
+        <h2 className="text-lg font-semibold mb-4">Block Domain</h2>
         {selectedUser ? (
           <>
             <div className="mb-4">
               <div className="mb-2 text-gray-600">
                 Selected User:{" "}
-                <span className="font-semibold">{selectedUser.username}</span>
+                <span className="font-semibold">{selectedUser.name}</span>
               </div>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="Enter IP to block"
-                  value={blockIP}
-                  onChange={(e) => setBlockIP(e.target.value)}
+                  placeholder="Enter domain (e.g., example.com)"
+                  value={blockDomain}
+                  onChange={(e) => setBlockDomain(e.target.value)}
                   className="border px-3 py-2 rounded w-full"
                 />
                 <button
-                  onClick={handleBlockIP}
+                  onClick={handleBlockDomain}
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center justify-center"
                   disabled={loading}
                 >
@@ -153,30 +161,31 @@ const AddRule = () => {
             </div>
 
             <div>
-              <div className="font-medium mb-2">Blocked IPs:</div>
-              <div className="flex flex-wrap gap-2"></div>
-              {(blockedIPs[selectedUser.id] || []).map((ip, idx) => (
-                <div
-                  key={idx}
-                  className="relative group bg-red-100 text-red-700 px-2 py-1 rounded text-sm"
-                >
-                  {ip}
-                  <button
-                    onClick={() => handleRemoveIP(selectedUser.id, ip)}
-                    className="absolute top-[-6px] right-[-6px] hidden group-hover:flex bg-red-600 text-white rounded-full w-4 h-4 text-xs items-center justify-center"
+              <div className="font-medium mb-2">Blocked Domains:</div>
+              <div className="flex flex-wrap gap-2">
+                {(blockedDomains[selectedUser.user_id] || []).map((domain, idx) => (
+                  <div
+                    key={idx}
+                    className="relative group bg-red-100 text-red-700 px-2 py-1 rounded text-sm"
                   >
-                    <FaTimes />
-                  </button>
-                </div>
-              ))}
-              {!blockedIPs[selectedUser.id]?.length && (
-                <p className="text-sm text-gray-500">No IPs blocked yet.</p>
+                    {domain}
+                    <button
+                      onClick={() => handleRemoveIP(selectedUser.user_id, domain)}
+                      className="absolute top-[-6px] right-[-6px] hidden group-hover:flex bg-red-600 text-white rounded-full w-4 h-4 text-xs items-center justify-center"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {!blockedDomains[selectedUser.user_id]?.length && (
+                <p className="text-sm text-gray-500">No domains blocked yet.</p>
               )}
             </div>
           </>
         ) : (
           <p className="text-gray-500">
-            Select a user to manage their blocked IPs
+            Select a user to manage their blocked domains
           </p>
         )}
       </div>
