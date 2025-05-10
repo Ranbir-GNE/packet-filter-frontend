@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
-const BASE_URL = import.meta.env.VITE_BASE_URL;;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const CumalativeTable = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -15,8 +16,9 @@ const CumalativeTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/all-entries`
+          `${BASE_URL}/api/network/bytes-usage/`
         ); // API endpoint
+        console.log("Fetched data:", response.data);
         setData(response.data);
         setFilteredData(response.data);
       } catch (error) {
@@ -139,7 +141,12 @@ const CumalativeTable = () => {
                   {row.uploaded}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {format(new Date(row.date), "dd/MM/yyyy")}
+                  {/* {format(new Date(row.date), "dd/MM/yyyy")} */}
+                  {new Date(row.date).toLocaleDateString("en-GB", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
                 </td>
               </tr>
             ))

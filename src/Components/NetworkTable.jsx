@@ -9,7 +9,7 @@ const NetworkTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/total-bytes`
+          `${BASE_URL}/api/network/total-bytes`
         ); // Updated API endpoint
         setData(response.data); // Use the aggregated data directly
       } catch (error) {

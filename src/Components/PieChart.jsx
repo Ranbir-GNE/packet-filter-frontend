@@ -14,7 +14,7 @@ const PieChart = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/total-bytes-hostname` // Updated API endpoint
+          `${BASE_URL}/api/network/total-bytes-hostname` // Updated API endpoint
         );
         const data = response.data;
 

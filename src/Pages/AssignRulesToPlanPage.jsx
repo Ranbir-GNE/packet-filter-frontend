@@ -1,12 +1,8 @@
-import React from "react";
 import Navbar from "../Components/Navbar";
 import Sidebar from "../Components/Sidebar";
-import PieChart from "../Components/PieChart";
-import NetworkTable from "../Components/NetworkTable";
-import NetworkTableHostname from "../Components/NetworkTableHostname";
-import CumalativeTable from "../Components/CumalativeTable";
+import AssignRulesToPlan from "../Components/AssignRulesToPlan";
 
-const Dashboard = () => {
+const AssignRulesToPlanPage = () => {
   return (
     <div className="h-screen flex flex-col">
       <div className="flex-none">
@@ -22,7 +18,7 @@ const Dashboard = () => {
           <div className="col-span-10 overflow-y-auto">
             <div className="flex-1 grid grid-cols-1 p-4">
               <div className="col-span-1">
-                <CumalativeTable />
+                <AssignRulesToPlan />
               </div>
             </div>
           </div>
@@ -32,4 +28,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AssignRulesToPlanPage;

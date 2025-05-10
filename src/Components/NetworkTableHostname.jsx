@@ -9,7 +9,7 @@ const NetworkTableHostname = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/total-bytes-hostname`
+          `${BASE_URL}/api/network/total-bytes-hostname`
         ); // Updated API endpoint
         setData(response.data); // Use the aggregated data directly
       } catch (error) {

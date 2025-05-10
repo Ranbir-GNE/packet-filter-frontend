@@ -7,7 +7,9 @@ import UserDataUsage from "./Pages/UserDataUsage";
 import HostnameDataUsage from "./Pages/HostnameDataUsage";
 import ProfilePage from "./Pages/ProfilePage";
 import AddUserRulePage from "./Pages/AddUserRulePage";
+import AddDomainPage from "./Pages/AddDomainPage";
 import { Toaster, toast } from "sonner";
+import AssignRulesToPlanPage from "./Pages/AssignRulesToPlanPage";
 
 const App = () => {
   const [loginUser, setLoginUser] = useState();
@@ -21,6 +23,8 @@ const App = () => {
           <Route path="/host" element={<HostnameDataUsage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/addrule" element={<AddUserRulePage />} />
+          <Route path="/assignDomain" element={<AddDomainPage />} />
+          <Route path="/addPlans" element={<AssignRulesToPlanPage />} />
         </Routes>
         <Toaster />
       </BrowserRouter>

@@ -5,7 +5,7 @@ import {
   FaDog,
   FaNotesMedical,
   FaUser,
-  FaBalanceScale
+  FaBalanceScale,
 } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -53,6 +53,20 @@ const Sidebar = () => {
           >
             <FaBalanceScale className="text-blue-400" />
             <span>Add User Rules</span>
+          </li>
+          <li
+            className="flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-gray-800 cursor-pointer transition"
+            onClick={() => navigate("/assignDomain")}
+          >
+            <FaBalanceScale className="text-blue-400" />
+            <span>Assign Domains Page</span>
+          </li>
+          <li
+            className="flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-gray-800 cursor-pointer transition"
+            onClick={() => navigate("/addPlans")}
+          >
+            <FaBalanceScale className="text-blue-400" />
+            <span>Assign Rules To Plan</span>
           </li>
         </ul>
       </div>
