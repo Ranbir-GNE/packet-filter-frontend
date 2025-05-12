@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import userContext from "../context/UserContext";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const CumalativeTable = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -22,7 +23,7 @@ const CumalativeTable = () => {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
+      const response = await axios.post(`${BASE_URL}/api/login`, {
         email: loginData.email,
         password: loginData.password,
       });

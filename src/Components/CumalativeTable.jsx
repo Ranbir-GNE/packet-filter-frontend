@@ -70,7 +70,7 @@ const CumalativeTable = () => {
       <div className="mb-4 flex flex-wrap gap-4">
         <input
           type="text"
-          placeholder="Filter by Source IP"
+          placeholder="Filter by User"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="border border-gray-300 px-4 py-2 flex-1"
@@ -96,7 +96,7 @@ const CumalativeTable = () => {
               className="border border-gray-300 px-4 py-2 cursor-pointer"
               onClick={() => handleSort("source_ip")}
             >
-              Source IP
+              User
             </th>
             <th
               className="border border-gray-300 px-4 py-2 cursor-pointer"

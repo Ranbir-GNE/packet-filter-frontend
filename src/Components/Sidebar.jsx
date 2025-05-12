@@ -38,21 +38,21 @@ const Sidebar = () => {
             onClick={() => navigate("/host")}
           >
             <FaDog className="text-blue-400" />
-            <span>Hostname Data Usage</span>
+            <span>Data Usage by Host Name</span>
           </li>
           <li
             className="flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-gray-800 cursor-pointer transition"
             onClick={() => navigate("/user")}
           >
             <FaNotesMedical className="text-blue-400" />
-            <span>User Data Usage</span>
+            <span>Data Usage by User</span>
           </li>
           <li
             className="flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-gray-800 cursor-pointer transition"
             onClick={() => navigate("/addrule")}
           >
             <FaBalanceScale className="text-blue-400" />
-            <span>Add User Rules</span>
+            <span>Add Rules</span>
           </li>
           <li
             className="flex items-center space-x-3 py-2 px-4 rounded-lg hover:bg-gray-800 cursor-pointer transition"

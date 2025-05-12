@@ -45,10 +45,10 @@ const AssignRulesToPlan = () => {
     setError("");
 
     try {
-      const res = await axios.get(`${BASE_URL}/api/rules/${user.ip_address}`);
+      const res = await axios.get(`${BASE_URL}/api/rules/${user.user_id}`);
       setUserRulesMap((prev) => ({
         ...prev,
-        [user.ip_address]: res.data || [],
+        [user.user_id]: res.data || [],
       }));
     } catch (err) {
       setError("Error fetching assigned rules for user");
@@ -79,7 +79,6 @@ const AssignRulesToPlan = () => {
 
       // Fetch updated rules for the user
       const res = await axios.get(`${BASE_URL}/api/rules/${userId}`);
-      console.log(res.data);
       setUserRulesMap((prev) => ({
         ...prev,
         [userId]: res.data || [],
@@ -126,18 +125,21 @@ const AssignRulesToPlan = () => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Users</h2>
         {users.map((user) => (
           <div
-            key={user.ip_address}
+            key={user.user_id}
             className={`p-4 mb-4 border rounded-lg cursor-pointer transition ${
-              selectedUser?.ip_address === user.ip_address
+              selectedUser?.user_id === user.user_id
                 ? "bg-blue-100 border-blue-500"
                 : "bg-gray-50 hover:bg-gray-100"
             }`}
             onClick={() => handleUserSelect(user)}
           >
             <p className="text-gray-700">
-              <strong>User ID:</strong> {user.ip_address}
+              <strong>User ID:</strong> {user.user_id}
             </p>
-            <p className="text-gray-600">{user.name}</p>
+            <p className="text-gray-600">
+              <strong>IP Address:</strong> {user.ip_address}
+            </p>
+            <p className="text-gray-600"><strong>Name: </strong>{user.name}</p>
           </div>
         ))}
       </div>
@@ -149,7 +151,7 @@ const AssignRulesToPlan = () => {
           {selectedUser ? (
             <>
               <p className="mb-4 text-gray-700">
-                <strong>Selected User:</strong> {selectedUser.ip_address}
+                <strong>Selected User:</strong> {selectedUser.user_id}
               </p>
 
               <select
@@ -171,7 +173,7 @@ const AssignRulesToPlan = () => {
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-blue-600"
                 }`}
-                onClick={() => handleAssignRule(selectedUser.ip_address)}
+                onClick={() => handleAssignRule(selectedUser.user_id)}
                 disabled={isLoading}
               >
                 {isLoading ? "Adding Rule..." : "Add Rule"}
@@ -190,8 +192,8 @@ const AssignRulesToPlan = () => {
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             Assigned Rules
           </h2>
-          {selectedUser && userRulesMap[selectedUser.ip_address]?.length > 0 ? (
-            userRulesMap[selectedUser.ip_address].map((rule) => (
+          {selectedUser && userRulesMap[selectedUser.user_id]?.length > 0 ? (
+            userRulesMap[selectedUser.user_id].map((rule) => (
               <div
                 key={rule.plan_id}
                 className="p-4 mb-4 border rounded-lg bg-gray-50 flex justify-between items-center"
@@ -204,7 +206,7 @@ const AssignRulesToPlan = () => {
                 </div>
                 <button
                   onClick={() =>
-                    handleDeleteRule(rule.plan_id, selectedUser.ip_address)
+                    handleDeleteRule(rule.plan_id, selectedUser.user_id)
                   }
                   className="text-red-500 hover:underline text-sm"
                 >

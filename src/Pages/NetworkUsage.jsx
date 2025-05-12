@@ -4,7 +4,7 @@ import Sidebar from "../Components/Sidebar";
 import PieChart from "../Components/PieChart";
 import NetworkTable from "../Components/NetworkTable";
 import NetworkTableHostname from "../Components/NetworkTableHostname";
-import CumalativeTable from "../Components/CmalativeTable";
+import CumalativeTable from "../Components/CumalativeTable";
 
 const Dashboard = () => {
   return (
