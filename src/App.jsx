@@ -17,7 +17,7 @@ const App = () => {
     <userContext.Provider value={{ loginUser, setLoginUser }}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LoginRegister />} />
+        <Route path="/" element={<LoginRegister />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/user" element={<UserDataUsage />} />
           <Route path="/host" element={<HostnameDataUsage />} />

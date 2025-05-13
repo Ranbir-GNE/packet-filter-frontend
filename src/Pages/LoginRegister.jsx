@@ -23,7 +23,7 @@ const CumalativeTable = () => {
     setErrorMessage("");
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/login`, {
+      const response = await axios.post(`${BASE_URL}/api/users/login`, {
         email: loginData.email,
         password: loginData.password,
       });
@@ -31,8 +31,8 @@ const CumalativeTable = () => {
       if (response.status === 200) {
         setUserData(response.data.user);
         authContext.setLoginUser(response.data);
-
         navigate("/dashboard");
+        
       }
     } catch (error) {
       console.error("Error during login:", error);

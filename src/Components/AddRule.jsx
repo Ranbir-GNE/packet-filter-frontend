@@ -19,7 +19,7 @@ const AddRule = () => {
       }
     };
     fetchRules();
-    }, []);
+    }, [ruleName]);
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -30,6 +30,9 @@ const AddRule = () => {
       const response = await axios.post(`${BASE_URL}/api/rules/create`, {
         rule_name: ruleName,
       });
+      if (!response) {
+        throw new Error("Failed to create rule");
+      }
 
       const newRule = response.data;
       setRules((prevRules) => [...prevRules, newRule]);
@@ -38,6 +41,20 @@ const AddRule = () => {
       console.error("Error creating rule:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Handle rule deletion
+  const handleDelete = async (ruleId) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/api/rules/${ruleId}`);
+      if (!response) {
+        throw new Error("Failed to delete rule");
+      }
+
+      setRules((prevRules) => prevRules.filter((rule) => rule.rule_id !== ruleId));
+    } catch (error) {
+      console.error("Error deleting rule:", error);
     }
   };
 
@@ -55,6 +72,11 @@ const AddRule = () => {
               {rule.rule_id}
               <br />
               {rule.rule_name}
+              <br />
+              <button type="submit"
+              onClick={async () => {handleDelete(rule.rule_id)}}
+              className="mt-2 text-red-500 hover:text-red-700 transition duration-300" 
+              >Delete Rule</button>
             </li>
           ))}
         </ul>

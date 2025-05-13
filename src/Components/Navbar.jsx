@@ -23,7 +23,7 @@ const Navbar = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/api/user/${userId}`
+          `${BASE_URL}/api/users/${userId}`
         );
         setUsername(response.data.user.username); 
         setIsLogin(true);
